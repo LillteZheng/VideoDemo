@@ -41,16 +41,21 @@ public class MediaCodecActivity extends AppCompatActivity {
     }
 
     private void initTractor() {
+
+
         //通过 MediaExtractor 解析视频
         try {
             mMediaExtractor = new MediaExtractor();
             //设置视频路径
             mMediaExtractor.setDataSource(Constants.VIDEO_PATH);
+            //获取轨道数
             int trackCount = mMediaExtractor.getTrackCount();
+            Log.d(TAG, "zsr initTractor: "+trackCount);
             for (int i = 0; i < trackCount; i++) {
                 MediaFormat trackFormat = mMediaExtractor.getTrackFormat(i);
                 String mime = trackFormat.getString(MediaFormat.KEY_MIME);
-                Log.d(TAG, "zsr onSurfaceTextureAvailable: " + mime);
+                Log.d(TAG, "zsr onSurfaceTextureAvailable: " + mime+" "+i);
+                //这里只截取视频轨
                 if ("video/mp4v-es".equals(mime)) {
                     mVideoFormat = trackFormat;
                     mVideoTrackIndex = i;
@@ -61,7 +66,6 @@ public class MediaCodecActivity extends AppCompatActivity {
 
             mWidth = mVideoFormat.getInteger(MediaFormat.KEY_WIDTH);
             mHeight = mVideoFormat.getInteger(MediaFormat.KEY_HEIGHT);
-
             //设置一下播放控件的宽高
             mTextureView.post(new Runnable() {
                 @Override
@@ -83,7 +87,7 @@ public class MediaCodecActivity extends AppCompatActivity {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 try {
-                    //开始解码，选择视频轨道
+                    //开始解码，选择要解析的轨道，这里选择使用视频轨
                     mMediaExtractor.selectTrack(mVideoTrackIndex);
                     //根据视频格式，创建赌赢的解码器，API 21以上，通过异步模式进行解码
                     mDecoder = MediaCodec.createDecoderByType(mMimeType);
@@ -94,7 +98,7 @@ public class MediaCodecActivity extends AppCompatActivity {
                             ByteBuffer inputBuffer = mDecoder.getInputBuffer(index);
                             boolean isDone = false;
                             while (!isDone) {
-                                //从视频中读取数据
+                                //从视频中读取数据，填充到 buffer 中
                                 int size = mMediaExtractor.readSampleData(inputBuffer, 0);
                                 long sampleTime = mMediaExtractor.getSampleTime();
                                 if (size >= 0) {
@@ -106,6 +110,7 @@ public class MediaCodecActivity extends AppCompatActivity {
                                             sampleTime,
                                             mMediaExtractor.getSampleFlags());
                                 }
+                                //是否能取到下一帧
                                 isDone = !mMediaExtractor.advance();
 
                                 if (isDone) {
@@ -135,8 +140,9 @@ public class MediaCodecActivity extends AppCompatActivity {
                             /**
                              * 这个地方先暂时认为每一帧的间隔是30ms，正常情况下，需要根据实际的视频帧的时间标记来计算每一帧的时间点。
                              * 因为视频帧的时间点是相对时间，正常第一帧是0，第二帧比如是第5ms。
-                             * 基本思路是：取出第一帧视频数据，记住当前时间点，然后读取第二帧视频数据，再用当前时间点减去第一帧时间点，看看相对时间是多少，有没有
-                             * 达到第二帧自己带的相对时间点。如果没有，则sleep一段时间，然后再去检查。直到大于或等于第二帧自带的时间点之后，进行视频渲染。
+                             * 基本思路是：取出第一帧视频数据，记住当前时间点，然后读取第二帧视频数据，再用当前时间点减去第一帧时间点，
+                             * 看看相对时间是多少，有没有达到第二帧自己带的相对时间点。如果没有，则sleep一段时间，
+                             * 然后再去检查。直到大于或等于第二帧自带的时间点之后，进行视频渲染。
                              */
                             try {
                                 Thread.sleep(30);
@@ -147,7 +153,12 @@ public class MediaCodecActivity extends AppCompatActivity {
                             codec.releaseOutputBuffer(index, true);
                             boolean reset = ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0);
                             if (reset) {
+                                //设置从零开始
                                 mMediaExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
+                                /**
+                                 * 在异步模式下，除了需要调用 mediacodec 的flush 方法，还需要调用 start 方法，
+                                 * 解码才会重新开始
+                                 */
                                 mDecoder.flush();
                                 mDecoder.start();
                             }
@@ -193,6 +204,7 @@ public class MediaCodecActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
     @Override

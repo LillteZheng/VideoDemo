@@ -33,7 +33,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         mMediaPlayer = new MediaPlayer();
 
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
 
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {

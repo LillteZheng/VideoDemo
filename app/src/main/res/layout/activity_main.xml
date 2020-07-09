@@ -10,9 +10,9 @@
   <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="MediaPlayer播放视频"
+      android:text="AudioRecord采集PCM并保存"
       android:textAllCaps="false"
-      android:onClick="meidaplayer"
+      android:onClick="audiorecord"
       />
   <Button
       android:layout_width="match_parent"

@@ -3,7 +3,7 @@
     package="com.zhengsr.videodemo">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MediaCodecActivity"></activity>
+        <activity android:name=".activity.AudioRecordActivity"></activity>
+        <activity android:name=".activity.MediaCodecActivity" />
         <activity android:name=".activity.MediaPlayerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -20,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.zhengsr.videodemo.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+           >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
     </application>
 
 </manifest>
