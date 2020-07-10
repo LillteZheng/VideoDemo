@@ -4,6 +4,13 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 支持相机才能运行 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AudioRecordActivity"></activity>
+        <activity android:name=".activity.Camera1Activity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.AudioRecordActivity" />
         <activity android:name=".activity.MediaCodecActivity" />
         <activity android:name=".activity.MediaPlayerActivity" />
         <activity android:name=".MainActivity">
@@ -26,13 +37,11 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.zhengsr.videodemo.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-           >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

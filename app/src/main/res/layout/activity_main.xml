@@ -14,12 +14,15 @@
       android:textAllCaps="false"
       android:onClick="audiorecord"
       />
+
   <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="MediaCodec播放视频"
+      android:text="Camera1"
       android:textAllCaps="false"
-      android:onClick="mediaCodec"
+      android:onClick="camera1"
       />
+
+
 
 </LinearLayout>

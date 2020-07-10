@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.zhengsr.videodemo.activity.AudioRecordActivity;
+import com.zhengsr.videodemo.activity.Camera1Activity;
 import com.zhengsr.videodemo.activity.MediaCodecActivity;
 import com.zhengsr.videodemo.activity.MediaPlayerActivity;
 
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.RECORD_AUDIO
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CAMERA
                 },1);
 
         File file = new File(Constants.VIDEO_PATH);
@@ -43,5 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void audiorecord(View view) {
         startActivity(new Intent(this, AudioRecordActivity.class));
+    }
+
+    public void camera1(View view) {
+        startActivity(new Intent(this, Camera1Activity.class));
     }
 }
