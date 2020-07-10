@@ -81,6 +81,21 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSurfaceView != null && mSurfaceView.getWidth() != 0){
+            openCamera(mCameraID);
+            startPreview(mSurfaceView.getWidth(),mSurfaceView.getHeight());
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeCamera();
+    }
+
     /**
      * 开始显示
      */
@@ -300,9 +315,11 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
      */
     private void closeCamera() {
         //停止预览
-        mCamera.stopPreview();
-        mCamera.release();
-        mCamera = null;
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
     class PreviewCallback implements SurfaceHolder.Callback {
