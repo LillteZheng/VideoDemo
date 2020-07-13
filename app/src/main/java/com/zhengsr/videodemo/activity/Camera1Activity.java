@@ -8,6 +8,7 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,8 +35,8 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
      */
 
     private int mFrontCameraId;
-    private Camera.CameraInfo mFrontCameraInfo;
     private int mBackCameraId;
+    private Camera.CameraInfo mFrontCameraInfo;
     private Camera.CameraInfo mBackCameraInfo;
     private Camera mCamera;
     private SurfaceView mSurfaceView;
@@ -48,7 +49,6 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
         initCamera();
 
         mSurfaceView = findViewById(R.id.surface);
-        mSurfaceView.getHolder().addCallback(new PreviewCallback());
 
         //打开摄像头
         openCamera(mBackCameraId);
@@ -87,6 +87,9 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
         if (mSurfaceView != null && mSurfaceView.getWidth() != 0){
             openCamera(mCameraID);
             startPreview(mSurfaceView.getWidth(),mSurfaceView.getHeight());
+        }else{
+            mSurfaceView.getHolder().addCallback(new PreviewCallback());
+
         }
     }
 
@@ -121,7 +124,7 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
      * @param cameraId
      */
     private void openCamera(int cameraId) {
-        //根据 cameraId 打开不同摄像头
+        //根据 cameraId 打开不同摄像头,注意，Camera1只有打开摄像头之后，才能拿到那些配置数据
         mCamera = Camera.open(cameraId);
         mCameraID = cameraId;
         Camera.CameraInfo info = cameraId == mFrontCameraId ? mFrontCameraInfo : mBackCameraInfo;
@@ -186,8 +189,19 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
             parameters.setPictureSize(bestSize.width, bestSize.height);
             //设置格式
             parameters.setPreviewFormat(ImageFormat.NV21);
-            //设置聚焦
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+
+            //设置自动聚焦
+            List<String> modes = parameters.getSupportedFocusModes();
+            //查看支持的聚焦模式
+            for (String mode : modes) {
+                //默认图片聚焦模式
+                if (mode.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                    break;
+                }
+            }
+
+
 
             camera.setParameters(parameters);
         }
@@ -287,7 +301,9 @@ public class Camera1Activity extends AppCompatActivity implements View.OnClickLi
                     bitmap = BitmapUtils.rotate(bitmap, 90);
                 } else {
                     bitmap = BitmapUtils.rotate(bitmap, 270);
+                    bitmap = BitmapUtils.mirror(bitmap);
                 }
+
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 
 

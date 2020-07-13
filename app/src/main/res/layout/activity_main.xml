@@ -18,11 +18,17 @@
   <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Camera1"
+      android:text="Camera1 进行预览拍照"
       android:textAllCaps="false"
       android:onClick="camera1"
       />
-
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Camera2 进行预览拍照"
+      android:textAllCaps="false"
+      android:onClick="camera2"
+      />
 
 
 </LinearLayout>
