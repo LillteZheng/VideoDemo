@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 支持相机才能运行 -->
-    <!--需要设备有相机-->
+    <uses-feature android:name="android.hardware.camera.any" />
+    <!-- 需要设备有相机 -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -18,19 +19,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.Camera2Activity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.CameraxActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.Camera2Activity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.Camera1Activity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+          />
+
         <activity android:name=".activity.AudioRecordActivity" />
         <activity android:name=".activity.MediaCodecActivity" />
         <activity android:name=".activity.MediaPlayerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

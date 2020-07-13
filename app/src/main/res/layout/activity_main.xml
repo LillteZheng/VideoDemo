@@ -29,6 +29,14 @@
       android:textAllCaps="false"
       android:onClick="camera2"
       />
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Camerax 进行预览拍照"
+      android:textAllCaps="false"
+      android:onClick="camerax"
+      />
+
 
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.zhengsr.videodemo.activity.AudioRecordActivity;
 import com.zhengsr.videodemo.activity.Camera1Activity;
 import com.zhengsr.videodemo.activity.Camera2Activity;
+import com.zhengsr.videodemo.activity.CameraxActivity;
 import com.zhengsr.videodemo.activity.MediaCodecActivity;
 import com.zhengsr.videodemo.activity.MediaPlayerActivity;
 
@@ -54,5 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void camera2(View view) {
         startActivity(new Intent(this, Camera2Activity.class));
+    }
+
+    public void camerax(View view) {
+        startActivity(new Intent(this, CameraxActivity.class));
     }
 }
