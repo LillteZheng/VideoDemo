@@ -1,4 +1,4 @@
-package com.zhengsr.videodemo.activity;
+package com.zhengsr.videodemo.activity.camera;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;

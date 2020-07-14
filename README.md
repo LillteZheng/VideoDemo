@@ -8,3 +8,5 @@
 [Android 音视频开发(三) -- Camera2 实现预览、拍照功能](https://blog.csdn.net/u011418943/article/details/107279236)
 
 [Android 音视频开发(四) -- CameraX 实现预览、拍照功能](https://blog.csdn.net/u011418943/article/details/107321420)
+
+[Android 音视频开发(五) -- 使用 MediaExtractor 分离音视频，并使用 MediaMuxer合成新视频(音视频同步)](https://blog.csdn.net/u011418943/article/details/107340700)

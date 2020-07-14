@@ -1,9 +1,8 @@
-package com.zhengsr.videodemo.activity;
+package com.zhengsr.videodemo.activity.camera;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
-import androidx.camera.core.CameraFilter;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -13,9 +12,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,8 +21,6 @@ import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
 
 import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Spliterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

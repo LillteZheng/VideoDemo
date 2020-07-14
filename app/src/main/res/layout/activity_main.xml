@@ -7,36 +7,31 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-  <Button
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="AudioRecord采集PCM并保存"
-      android:textAllCaps="false"
-      android:onClick="audiorecord"
-      />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="audiorecord"
+        android:text="AudioRecord采集PCM并保存"
+        android:textAllCaps="false" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Camera预览拍照"
+        android:textAllCaps="false"
+        android:onClick="camera"/>
 
   <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Camera1 进行预览拍照"
+      android:text="MediaPalyer 播放视频"
       android:textAllCaps="false"
-      android:onClick="camera1"
-      />
-  <Button
+      android:onClick="mediaplay"/>
+    <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Camera2 进行预览拍照"
+      android:text="MediaExtractor 解析视频，MediaMuxer封装视频"
       android:textAllCaps="false"
-      android:onClick="camera2"
-      />
-  <Button
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Camerax 进行预览拍照"
-      android:textAllCaps="false"
-      android:onClick="camerax"
-      />
-
-
+      android:onClick="extractor"/>
 
 </LinearLayout>

@@ -10,11 +10,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.zhengsr.videodemo.activity.AudioRecordActivity;
-import com.zhengsr.videodemo.activity.Camera1Activity;
-import com.zhengsr.videodemo.activity.Camera2Activity;
-import com.zhengsr.videodemo.activity.CameraxActivity;
-import com.zhengsr.videodemo.activity.MediaCodecActivity;
+import com.zhengsr.videodemo.activity.ExtractorMuxerActivity;
 import com.zhengsr.videodemo.activity.MediaPlayerActivity;
+import com.zhengsr.videodemo.activity.camera.Camera1Activity;
+import com.zhengsr.videodemo.activity.camera.Camera2Activity;
+import com.zhengsr.videodemo.activity.camera.CameraActivity;
+import com.zhengsr.videodemo.activity.camera.CameraxActivity;
+import com.zhengsr.videodemo.activity.MediaCodecActivity;
 
 import java.io.File;
 
@@ -37,10 +39,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-  /*  public void meidaplayer(View view) {
-        startActivity(new Intent(this, MediaPlayerActivity.class));
-    }
-*/
+
     public void mediaCodec(View view) {
         startActivity(new Intent(this, MediaCodecActivity.class));
     }
@@ -49,15 +48,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, AudioRecordActivity.class));
     }
 
-    public void camera1(View view) {
-        startActivity(new Intent(this, Camera1Activity.class));
+
+    public void camera(View view) {
+        startActivity(new Intent(this, CameraActivity.class));
     }
 
-    public void camera2(View view) {
-        startActivity(new Intent(this, Camera2Activity.class));
+    public void mediaplay(View view) {
+        startActivity(new Intent(this, MediaPlayerActivity.class));
     }
 
-    public void camerax(View view) {
-        startActivity(new Intent(this, CameraxActivity.class));
+    public void extractor(View view) {
+        startActivity(new Intent(this, ExtractorMuxerActivity.class));
     }
 }
