@@ -28,12 +28,11 @@ public class CameraxActivity extends AppCompatActivity {
     private static final String TAG = "CameraxActivity";
     private PreviewView mViewFinder;
     private ImageCapture mImageCapture;
-    private ExecutorService mExecutorService;
+    private int mFacing = CameraSelector.LENS_FACING_BACK;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camerax);
-        mExecutorService = Executors.newSingleThreadExecutor();
         //PreviewView，这是一种可以剪裁、缩放和旋转以确保正确显示的 View
         mViewFinder = findViewById(R.id.viewFinder);
         startCamera();
@@ -62,7 +61,7 @@ public class CameraxActivity extends AppCompatActivity {
 
 
                     //选择后置摄像头
-                    CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
+                    CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(mFacing).build();
 
                     //预览之前先解绑
                     cameraProvider.unbindAll();
@@ -107,5 +106,15 @@ public class CameraxActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void switchCamera(View view) {
+        /**
+         * 白屏的问题是 PreviewView 移除所有View，且没数据到 Surface，
+         * 所以只留背景色，可以对次做处理
+         */
+        mFacing =  mFacing == CameraSelector.LENS_FACING_FRONT?
+                CameraSelector.LENS_FACING_BACK:CameraSelector.LENS_FACING_FRONT;
+        startCamera();
     }
 }
