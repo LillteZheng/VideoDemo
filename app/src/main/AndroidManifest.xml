@@ -40,6 +40,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.AacTrackActivity"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.zhengsr.videodemo.fileprovider"

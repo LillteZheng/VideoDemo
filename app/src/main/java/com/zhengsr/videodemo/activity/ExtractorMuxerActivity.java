@@ -7,11 +7,12 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
+import com.zhengsr.videodemo.media.MyExtractor;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -111,12 +112,11 @@ public class ExtractorMuxerActivity extends AppCompatActivity {
 
     }
 
-
-    class MyMuxer {
+     class MyMuxer {
         //创建音频的 MediaExtractor
-        MyExtractor audioExtractor = new MyExtractor();
+        MyExtractor audioExtractor = new MyExtractor(Constants.VIDEO_PATH);
         //创建视频的 MediaExtractor
-        MyExtractor videoExtractor = new MyExtractor();
+        MyExtractor videoExtractor = new MyExtractor(Constants.VIDEO_PATH);
         MediaMuxer mediaMuxer;
         private int audioId;
         private int videoId;
@@ -125,13 +125,14 @@ public class ExtractorMuxerActivity extends AppCompatActivity {
         private MuxerListener listener;
         //新的视频名
         String name = "mixvideo.mp4";
+
         public MyMuxer(MuxerListener listener) {
             this.listener = listener;
             File dir = new File(Constants.PATH);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File file = new File(Constants.PATH,name);
+            File file = new File(Constants.PATH, name);
             //已存在就先删掉
             if (file.exists()) {
                 file.delete();
@@ -168,21 +169,23 @@ public class ExtractorMuxerActivity extends AppCompatActivity {
                         //混合视频
                         int videoSize;
                         //读取视频帧的数据，直到结束
-                        while ((videoSize = videoExtractor.readBuffer(buffer, true)) > 0) {
+                        videoExtractor.selectTrack(videoExtractor.getVideoTrackId());
+                        while ((videoSize = videoExtractor.readBuffer(buffer)) > 0) {
                             info.offset = 0;
                             info.size = videoSize;
-                            info.presentationTimeUs = videoExtractor.getCurSampleTime();
-                            info.flags = videoExtractor.getCurSampleFlags();
+                            info.presentationTimeUs = videoExtractor.getSampleTime();
+                            info.flags = videoExtractor.getSampleFlags();
                             mediaMuxer.writeSampleData(videoId, buffer, info);
                         }
                         //写完视频，再把音频混合进去
                         int audioSize;
                         //读取音频帧的数据，直到结束
-                        while ((audioSize = audioExtractor.readBuffer(buffer, false)) > 0) {
+                        audioExtractor.selectTrack(audioExtractor.getAudioTrackId());
+                        while ((audioSize = audioExtractor.readBuffer(buffer)) > 0) {
                             info.offset = 0;
                             info.size = audioSize;
-                            info.presentationTimeUs = audioExtractor.getCurSampleTime();
-                            info.flags = audioExtractor.getCurSampleFlags();
+                            info.presentationTimeUs = audioExtractor.getSampleTime();
+                            info.flags = audioExtractor.getSampleFlags();
                             mediaMuxer.writeSampleData(audioId, buffer, info);
                         }
                         //释放资源
@@ -190,7 +193,7 @@ public class ExtractorMuxerActivity extends AppCompatActivity {
                         videoExtractor.release();
                         mediaMuxer.stop();
                         mediaMuxer.release();
-                        listener.onSuccess(Constants.PATH+File.separator+name);
+                        listener.onSuccess(Constants.PATH + File.separator + name);
                     } catch (Exception e) {
                         e.printStackTrace();
                         listener.onFail(e.getMessage());
@@ -203,112 +206,15 @@ public class ExtractorMuxerActivity extends AppCompatActivity {
         }
 
 
+
     }
-    public interface MuxerListener{
+
+     interface MuxerListener{
         void onstart();
         void onSuccess(String filePath);
         void onFail(String errorMsg);
     }
 
-    class MyExtractor {
-        MediaExtractor mediaExtractor;
-        int videoTrackId;
-        int audioTrackId;
-        MediaFormat videoFormat;
-        MediaFormat audioFormat;
-        long curSampleTime;
-        int curSampleFlags;
-
-        public MyExtractor() {
-            try {
-                mediaExtractor = new MediaExtractor();
-                // 设置数据源
-                mediaExtractor.setDataSource(Constants.VIDEO_PATH);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //拿到所有的轨道
-            int count = mediaExtractor.getTrackCount();
-            for (int i = 0; i < count; i++) {
-                //根据下标拿到 MediaFormat
-                MediaFormat format = mMediaExtractor.getTrackFormat(i);
-                //拿到 mime 类型
-                String mime = format.getString(MediaFormat.KEY_MIME);
-                //拿到视频轨
-                if (mime.startsWith("video")) {
-                    videoTrackId = i;
-                    videoFormat = format;
-                } else if (mime.startsWith("audio")) {
-                    //拿到音频轨
-                    audioTrackId = i;
-                    audioFormat = format;
-                }
-
-            }
-        }
-
-        /**
-         * 读取一帧的数据
-         * @param buffer
-         * @return
-         */
-        int readBuffer(ByteBuffer buffer, boolean video) {
-            //先清空数据
-            buffer.clear();
-            //选择要解析的轨道
-            mediaExtractor.selectTrack(video ? videoTrackId : audioTrackId);
-            //读取当前帧的数据
-            int buffercount = mediaExtractor.readSampleData(buffer, 0);
-            if (buffercount < 0) {
-                return -1;
-            }
-            //记录当前时间戳
-            curSampleTime = mediaExtractor.getSampleTime();
-            //记录当前帧的标志位
-            curSampleFlags = mediaExtractor.getSampleFlags();
-            //进入下一帧
-            mediaExtractor.advance();
-            return buffercount;
-        }
-
-        /**
-         * 获取音频 MediaFormat
-         * @return
-         */
-        public MediaFormat getAudioFormat() {
-            return audioFormat;
-        }
-
-        /**
-         * 获取视频 MediaFormat
-         * @return
-         */
-        public MediaFormat getVideoFormat() {
-            return videoFormat;
-        }
-
-        /**
-         * 获取当前帧的标志位
-         * @return
-         */
-        public int getCurSampleFlags() {
-            return curSampleFlags;
-        }
-        /**
-         * 获取当前帧的时间戳
-         * @return
-         */
-        public long getCurSampleTime() {
-            return curSampleTime;
-        }
-
-        /**
-         * 释放资源
-         */
-        public void release() {
-            mediaExtractor.release();
-        }
-    }
 
 
 }

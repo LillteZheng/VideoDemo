@@ -153,7 +153,7 @@ public class AudioRecordActivity extends AppCompatActivity {
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
             /**
-             * 设置音频哥特式
+             * 设置音频数据
              * 1. 设置采样率
              * 2. 设置采样位数
              * 3. 设置声道
