@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ExtractorMuxerActivity"></activity>
+        <activity android:name=".activity.codec.AacCodecActivity"></activity>
+        <activity android:name=".activity.ExtractorMuxerActivity" />
         <activity android:name=".activity.camera.CameraActivity" />
         <activity
             android:name=".activity.camera.CameraxActivity"
@@ -39,8 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.AacTrackActivity"/>
+        <activity android:name=".activity.AacTrackActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

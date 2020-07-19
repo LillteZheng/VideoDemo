@@ -2,6 +2,7 @@ package com.zhengsr.videodemo.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
@@ -13,10 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 
 import com.zhengsr.videodemo.AudioDecoderThread;
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
+import com.zhengsr.videodemo.activity.codec.AacCodecActivity;
 import com.zhengsr.videodemo.media.MyExtractor;
 
 import java.io.IOException;
@@ -24,7 +27,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MediaCodecActivity extends AppCompatActivity {
+public class MediaCodecActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MediaCodecActivity";
     private TextureView mTextureView;
     private VideoDecodeSync mVideoSync;
@@ -36,9 +39,19 @@ public class MediaCodecActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_codec);
 
+        findViewById(R.id.pcmaac).setOnClickListener(this);
 
      //   new AudioDecoderThread().startPlay(Constants.VIDEO_PATH);
-        init();
+      //  init();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.pcmaac:
+                startActivity(new Intent(this, AacCodecActivity.class));
+                break;
+        }
     }
 
 
@@ -72,6 +85,8 @@ public class MediaCodecActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     abstract class BaseDecode implements Runnable {
