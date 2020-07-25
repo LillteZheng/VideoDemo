@@ -5,24 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.codec.MediaCodecActivity">
+    tools:context=".activity.codec.DecodeMediaActivity">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MediaCodec解码音视频"
-        android:onClick="decoder"
-        android:textAllCaps="false" />
-
+        android:text="使用同步模式"
+        android:onClick="sync"
+        />
     <Button
-        android:id="@+id/pcmaac"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="录音生成的 PCM 文件编码为 AAC"
-        android:onClick="encodeAcc"
-        android:textAllCaps="false" />
+        android:text="使用异步模式"
+        android:onClick="async"
+        />
 
-
-
+    <TextureView
+        android:id="@+id/surface"
+        android:layout_width="match_parent"
+        android:layout_height="240dp" />
 
 </LinearLayout>

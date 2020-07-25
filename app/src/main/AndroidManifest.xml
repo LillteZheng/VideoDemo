@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.codec.AacCodecActivity"></activity>
+        <activity android:name=".activity.codec.DecodeMediaActivity"></activity>
+        <activity android:name=".activity.codec.AacCodecActivity" />
         <activity android:name=".activity.ExtractorMuxerActivity" />
         <activity android:name=".activity.camera.CameraActivity" />
         <activity
@@ -31,7 +32,7 @@
             android:name=".activity.camera.Camera1Activity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.AudioRecordActivity" />
-        <activity android:name=".activity.MediaCodecActivity" />
+        <activity android:name=".activity.codec.MediaCodecActivity" />
         <activity android:name=".activity.MediaPlayerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

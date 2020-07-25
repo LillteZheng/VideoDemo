@@ -1,8 +1,9 @@
-package com.zhengsr.videodemo.activity;
+package com.zhengsr.videodemo.activity.codec;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.app.Dialog;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
@@ -15,11 +16,10 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 
-import com.zhengsr.videodemo.AudioDecoderThread;
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
-import com.zhengsr.videodemo.activity.codec.AacCodecActivity;
 import com.zhengsr.videodemo.media.MyExtractor;
 
 import java.io.IOException;
@@ -27,46 +27,41 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MediaCodecActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "MediaCodecActivity";
+public class DecodeMediaActivity extends AppCompatActivity {
+    private static final String TAG = "DecodeMediaActivity";
     private TextureView mTextureView;
     private VideoDecodeSync mVideoSync;
     private AudioDecodeSync mAudioDecodeSync;
     private ExecutorService mExecutorService = Executors.newFixedThreadPool(2);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_codec);
+        setContentView(R.layout.activity_decode_media);
 
-        findViewById(R.id.pcmaac).setOnClickListener(this);
-
-     //   new AudioDecoderThread().startPlay(Constants.VIDEO_PATH);
-      //  init();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.pcmaac:
-                startActivity(new Intent(this, AacCodecActivity.class));
-                break;
-        }
+        init();
     }
 
 
+    /**
+     * 配置TextureView
+     */
     private void init() {
         mTextureView = findViewById(R.id.surface);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
 
-
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                mVideoSync = new VideoDecodeSync();
-                mAudioDecodeSync = new AudioDecodeSync();
-                mExecutorService.execute(mVideoSync);
-                mExecutorService.execute(mAudioDecodeSync);
+                MyExtractor myExtractor = new MyExtractor(Constants.VIDEO_PATH);
+                MediaFormat videoFormat = myExtractor.getVideoFormat();
+                int vw = videoFormat.getInteger(MediaFormat.KEY_WIDTH);
+                int vh = videoFormat.getInteger(MediaFormat.KEY_WIDTH);
+                ViewGroup.LayoutParams params = mTextureView.getLayoutParams();
+                params.width = vw;
+                params.height = vh;
+                mTextureView.setLayoutParams(params);
+
+
             }
 
             @Override
@@ -86,15 +81,104 @@ public class MediaCodecActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    public void sync(View view) {
+        if (mExecutorService.isShutdown()){
+            mExecutorService = Executors.newFixedThreadPool(2);
+        }
+        mVideoSync = new VideoDecodeSync();
+        mAudioDecodeSync = new AudioDecodeSync();
+        mExecutorService.execute(mVideoSync);
+        mExecutorService.execute(mAudioDecodeSync);
+    }
+
+    public void async(View view) {
+        if (mVideoSync != null) {
+            mVideoSync.done();
+        }
+        if (mAudioDecodeSync != null) {
+            mAudioDecodeSync.done();
+        }
+
+        mExecutorService.shutdownNow();
+
+        new AsyncDecode().start();
+    }
 
 
+    class AsyncDecode {
+        MediaFormat mediaFormat;
+        MediaCodec mediaCodec;
+        MyExtractor extractor;
+
+        public AsyncDecode() {
+            try {
+                extractor = new MyExtractor(Constants.VIDEO_PATH);
+                mediaFormat = (extractor.getVideoFormat() );
+                String mime = mediaFormat.getString(MediaFormat.KEY_MIME);
+                extractor.selectTrack(extractor.getVideoTrackId());
+                mediaCodec = MediaCodec.createDecoderByType(mime);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        private void start() {
+            mediaCodec.setCallback(new MediaCodec.Callback() {
+                @Override
+                public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
+                    ByteBuffer inputBuffer = codec.getInputBuffer(index);
+                    boolean isDone = false;
+                   // while (!isDone) {
+                        int size = extractor.readBuffer(inputBuffer);
+                        if (size >= 0) {
+                            codec.queueInputBuffer(
+                                    index,
+                                    0,
+                                    size,
+                                    extractor.getSampleTime(),
+                                    extractor.getSampleFlags()
+                            );
+                        } else {
+                            //结束
+                            codec.queueInputBuffer(
+                                    index,
+                                    0,
+                                    0,
+                                    0,
+                                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                            );
+                            isDone = true;
+                        }
+                   // }
+                }
+
+                @Override
+                public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
+                    Log.d(TAG, "zsr onOutputBufferAvailable: "+Thread.currentThread());
+                    codec.releaseOutputBuffer(index, true);
+                }
+
+                @Override
+                public void onError(@NonNull MediaCodec codec, @NonNull MediaCodec.CodecException e) {
+                    codec.reset();
+                }
+
+                @Override
+                public void onOutputFormatChanged(@NonNull MediaCodec codec, @NonNull MediaFormat format) {
+
+                }
+            });
+            mediaCodec.configure(mediaFormat, new Surface(mTextureView.getSurfaceTexture()), null, 0);
+            mediaCodec.start();
+        }
+
+    }
 
     abstract class BaseDecode implements Runnable {
         final static int VIDEO = 1;
         final static int AUDIO = 2;
-        final static int TIME_US = 10000;
+        final static int TIME_US = 1000;
         MediaFormat mediaFormat;
-
         MediaCodec mediaCodec;
         MyExtractor extractor;
 
@@ -105,7 +189,6 @@ public class MediaCodecActivity extends AppCompatActivity implements View.OnClic
                 int type = decodeType();
                 mediaFormat = (type == VIDEO ? extractor.getVideoFormat() : extractor.getAudioFormat());
                 String mime = mediaFormat.getString(MediaFormat.KEY_MIME);
-                Log.d(TAG, "zsr BaseDecode: "+mime);
                 extractor.selectTrack(type == VIDEO ? extractor.getVideoTrackId() : extractor.getAudioTrackId());
                 mediaCodec = MediaCodec.createDecoderByType(mime);
 
@@ -291,7 +374,9 @@ public class MediaCodecActivity extends AppCompatActivity implements View.OnClic
         protected void done() {
             super.done();
             //释放 AudioTrack
-            audioTrack.stop();
+            if (audioTrack.getState()!= AudioTrack.STATE_UNINITIALIZED) {
+                audioTrack.stop();
+            }
             audioTrack.release();
         }
     }

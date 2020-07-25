@@ -12,15 +12,12 @@ import android.widget.Toast;
 import com.zhengsr.videodemo.activity.AudioRecordActivity;
 import com.zhengsr.videodemo.activity.ExtractorMuxerActivity;
 import com.zhengsr.videodemo.activity.MediaPlayerActivity;
-import com.zhengsr.videodemo.activity.camera.Camera1Activity;
-import com.zhengsr.videodemo.activity.camera.Camera2Activity;
 import com.zhengsr.videodemo.activity.camera.CameraActivity;
-import com.zhengsr.videodemo.activity.camera.CameraxActivity;
-import com.zhengsr.videodemo.activity.MediaCodecActivity;
+import com.zhengsr.videodemo.activity.codec.MediaCodecActivity;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public  class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
