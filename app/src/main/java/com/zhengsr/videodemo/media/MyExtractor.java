@@ -8,6 +8,9 @@ import com.zhengsr.videodemo.Constants;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * 解析 MediaExtractor
+ */
 public class MyExtractor {
     MediaExtractor mediaExtractor;
     int videoTrackId;

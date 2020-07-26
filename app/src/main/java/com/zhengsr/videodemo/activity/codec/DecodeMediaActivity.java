@@ -37,7 +37,6 @@ public class DecodeMediaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decode_media);
-
         init();
     }
 
@@ -60,8 +59,6 @@ public class DecodeMediaActivity extends AppCompatActivity {
                 params.width = vw;
                 params.height = vh;
                 mTextureView.setLayoutParams(params);
-
-
             }
 
             @Override
@@ -174,9 +171,13 @@ public class DecodeMediaActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 解码基类，用于解码音视频
+     */
     abstract class BaseDecode implements Runnable {
         final static int VIDEO = 1;
         final static int AUDIO = 2;
+        //等待时间
         final static int TIME_US = 1000;
         MediaFormat mediaFormat;
         MediaCodec mediaCodec;
@@ -185,13 +186,21 @@ public class DecodeMediaActivity extends AppCompatActivity {
         private boolean isDone;
         public BaseDecode() {
             try {
+                //获取 MediaExtractor
                 extractor = new MyExtractor(Constants.VIDEO_PATH);
+                //判断是音频还是视频
                 int type = decodeType();
+                //拿到音频或视频的 MediaFormat
                 mediaFormat = (type == VIDEO ? extractor.getVideoFormat() : extractor.getAudioFormat());
                 String mime = mediaFormat.getString(MediaFormat.KEY_MIME);
+                //选择要解析的轨道
                 extractor.selectTrack(type == VIDEO ? extractor.getVideoTrackId() : extractor.getAudioTrackId());
+                //创建 MediaCodec
                 mediaCodec = MediaCodec.createDecoderByType(mime);
-
+                //由子类去配置
+                configure();
+                //开始工作，进入编解码状态
+                mediaCodec.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -199,21 +208,27 @@ public class DecodeMediaActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            configure();
-            mediaCodec.start();
+
+
             try {
 
                 MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
                 //编码
                 while (!isDone) {
-                    //单位是 us
+                    /**
+                     * 延迟 TIME_US 等待拿到空的 input buffer下标，单位为 us
+                     * -1 表示一直等待，知道拿到数据
+                     */
                     int inputBufferId = mediaCodec.dequeueInputBuffer(TIME_US);
 
-                    //读数据都是一直的，所以这里可以封装起来
                     if (inputBufferId > 0) {
+                        //拿到 可用的，空的 input buffer
                         ByteBuffer inputBuffer = mediaCodec.getInputBuffer(inputBufferId);
                         if (inputBuffer != null) {
-                            // int size = mMediaExtractor.readSampleData(inputBuffer, 0);
+                            /**
+                             * 通过 mediaExtractor.readSampleData(buffer, 0) 拿到视频的当前帧的buffer
+                             *
+                             */
                             int size = extractor.readBuffer(inputBuffer);
                             //解析数据
                             if (size >= 0) {
@@ -245,9 +260,6 @@ public class DecodeMediaActivity extends AppCompatActivity {
                     if (isFinish){
                         break;
                     }
-
-                    //BaseDecode.this.handleOutputData(info);
-
 
                 }
 
