@@ -10,3 +10,8 @@
 [Android 音视频开发(四) -- CameraX 实现预览、拍照功能](https://blog.csdn.net/u011418943/article/details/107321420)
 
 [Android 音视频开发(五) -- 使用 MediaExtractor 分离音视频，并使用 MediaMuxer合成新视频(音视频同步)](https://blog.csdn.net/u011418943/article/details/107340700)
+
+
+# 二、Android MediaCodec 编解码
+[Android 音视频编解码(一) – MediaCodec 初探](https://blog.csdn.net/u011418943/article/details/107448870)
+[Android 音视频编解码(二) -- MediaCodec 解码(同步和异步)](https://blog.csdn.net/u011418943/article/details/107561111)

@@ -1,4 +1,4 @@
-package com.zhengsr.videodemo.media.codec.decode;
+package com.zhengsr.videodemo.media.codec.decode.async;
 
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -24,6 +24,9 @@ public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callb
 
     public BaseAsyncDecode() {
         super();
+        /**
+         * 用 HandlerThread 其实不怎么好，待后面优化
+         */
         mHandlerThread = new HandlerThread(decodeType() == VIDEO ? "videoThread" : "audioThread");
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper(), this);
@@ -61,9 +64,13 @@ public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callb
     }
 
     public void release(){
-        stop();
-        releaseMedia();
-        mBlockingQueue = null;
+        try {
+            stop();
+            releaseMedia();
+            mBlockingQueue = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

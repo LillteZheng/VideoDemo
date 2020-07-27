@@ -8,8 +8,6 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 
-import com.zhengsr.videodemo.media.codec.decode.BaseSyncDecode;
-
 import java.nio.ByteBuffer;
 
 /**
@@ -92,11 +90,14 @@ public class SyncAudioDecode extends BaseSyncDecode {
         //拿到output buffer
         int outputIndex = mediaCodec.dequeueOutputBuffer(info, TIME_US);
         ByteBuffer outputBuffer;
-        if (outputIndex >= 0) {
+        while (outputIndex >= 0) {
             outputBuffer = mediaCodec.getOutputBuffer(outputIndex);
-            //写数据到 AudioTrack 只，实现音频播放
-            audioTrack.write(outputBuffer, info.size, AudioTrack.WRITE_BLOCKING);
-            mediaCodec.releaseOutputBuffer(outputIndex, false);
+            if (outputBuffer != null) {
+                //写数据到 AudioTrack 只，实现音频播放
+                audioTrack.write(outputBuffer, info.size, AudioTrack.WRITE_BLOCKING);
+                mediaCodec.releaseOutputBuffer(outputIndex, false);
+            }
+            outputIndex = mediaCodec.dequeueOutputBuffer(info, TIME_US);
         }
         // 在所有解码后的帧都被渲染后，就可以停止播放了
         if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {

@@ -78,8 +78,7 @@ public class DecodeMediaActivity extends AppCompatActivity {
                 params.height = vh;
                 mTextureView.setLayoutParams(params);
 
-                mVideoSync = new SyncVideoDecode(surface);
-                mAudioDecodeSync = new SyncAudioDecode();
+
             }
 
             @Override
@@ -100,24 +99,11 @@ public class DecodeMediaActivity extends AppCompatActivity {
     }
 
     public void sync(View view) {
-        if (mExecutorService.isShutdown()) {
-            mExecutorService = Executors.newFixedThreadPool(2);
-        }
+        stopMedia();
 
-        if (mVideoSync != null) {
-            mVideoSync.done();
-        }
-        if (mAudioDecodeSync != null) {
-            mAudioDecodeSync.done();
-        }
 
-        if (mAsyncAudio != null) {
-            mAsyncAudio.stop();
-        }
-        if (mAsyncVide != null) {
-            mAsyncVide.stop();
-        }
-
+        mVideoSync = new SyncVideoDecode(mTextureView.getSurfaceTexture());
+        mAudioDecodeSync = new SyncAudioDecode();
 
         mExecutorService.execute(mVideoSync);
         mExecutorService.execute(mAudioDecodeSync);
@@ -126,14 +112,8 @@ public class DecodeMediaActivity extends AppCompatActivity {
     public void async(View view) {
 
 
-        if (mAsyncAudio != null) {
-            mAsyncAudio.release();
-        }
-        if (mAsyncVide != null) {
-            mAsyncVide.release();
-        }
-
-       // mExecutorService.shutdownNow();
+        stopMedia();
+        // mExecutorService.shutdownNow();
 
         mAsyncVide = new AsyncVideoDecode(mTextureView.getSurfaceTexture());
 
@@ -144,11 +124,26 @@ public class DecodeMediaActivity extends AppCompatActivity {
 
     }
 
+    private void stopMedia() {
+        if (mExecutorService != null) {
+            mExecutorService.shutdownNow();
+        }
+        mExecutorService = Executors.newFixedThreadPool(2);
+        if (mAsyncAudio != null) {
+            mAsyncAudio.release();
+        }
+        if (mAsyncVide != null) {
+            mAsyncVide.release();
+        }
 
+        if (mVideoSync != null) {
+            mVideoSync.done();
+        }
 
-
-
-
+        if (mAudioDecodeSync != null) {
+            mAudioDecodeSync.done();
+        }
+    }
 
 
     @Override

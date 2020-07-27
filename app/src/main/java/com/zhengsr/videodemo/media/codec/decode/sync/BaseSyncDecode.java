@@ -1,15 +1,11 @@
-package com.zhengsr.videodemo.media.codec.decode;
+package com.zhengsr.videodemo.media.codec.decode.sync;
 
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodec;
-import android.media.MediaFormat;
 import android.view.Surface;
 
-import com.zhengsr.videodemo.Constants;
-import com.zhengsr.videodemo.media.MyExtractor;
 import com.zhengsr.videodemo.media.codec.BaseCodec;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -17,11 +13,12 @@ import java.nio.ByteBuffer;
  */
 public abstract class BaseSyncDecode extends BaseCodec implements Runnable {
     //等待时间
-    protected final static int TIME_US = 1000;
+    protected final static int TIME_US = 10000;
     protected Surface mSurface;
     private boolean isDone;
-
+    private MediaCodec.BufferInfo mInfo = new MediaCodec.BufferInfo();
     public BaseSyncDecode() {
+        super();
         //由子类去配置
         configure();
         //开始工作，进入编解码状态
@@ -29,6 +26,7 @@ public abstract class BaseSyncDecode extends BaseCodec implements Runnable {
     }
 
     public BaseSyncDecode(SurfaceTexture surfaceTexture) {
+        super();
         mSurface = new Surface(surfaceTexture);
         //由子类去配置
         configure();
@@ -41,8 +39,6 @@ public abstract class BaseSyncDecode extends BaseCodec implements Runnable {
 
 
         try {
-
-            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
             //编码
             while (!isDone) {
                 /**
@@ -84,7 +80,7 @@ public abstract class BaseSyncDecode extends BaseCodec implements Runnable {
                     }
                 }
                 //解码输出交给子类
-                boolean isFinish = handleOutputData(info);
+                boolean isFinish = handleOutputData(mInfo);
                 if (isFinish) {
                     break;
                 }

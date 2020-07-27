@@ -6,18 +6,12 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.os.Bundle;
 import android.os.Message;
-import android.sax.RootElement;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.zhengsr.videodemo.media.codec.decode.BaseAsyncDecode;
-
 import java.nio.ByteBuffer;
-import java.util.StringJoiner;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -97,7 +91,6 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
 
             @Override
             public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-                Log.d(TAG, "zsr onOutputBufferAvailable: ");
                 Message msg = new Message();
                 msg.what = MSG_AUDIO_OUTPUT;
                 msg.arg1 = index;
@@ -185,7 +178,6 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
     @Override
     public void stop() {
         super.stop();
-        Log.d(TAG, "zsr stop: ");
         //释放 AudioTrack
         if (mAudioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
             mAudioTrack.stop();

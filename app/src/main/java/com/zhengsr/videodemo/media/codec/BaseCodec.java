@@ -3,6 +3,7 @@ package com.zhengsr.videodemo.media.codec;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.FloatProperty;
+import android.util.Log;
 
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.media.MyExtractor;
@@ -10,6 +11,7 @@ import com.zhengsr.videodemo.media.MyExtractor;
 import java.io.IOException;
 
 public abstract class BaseCodec {
+    private static final String TAG = "BaseCodec";
     protected final static int VIDEO = 1;
     protected final static int AUDIO = 2;
     protected MediaFormat mediaFormat;
@@ -18,6 +20,7 @@ public abstract class BaseCodec {
 
 
     public BaseCodec() {
+
         try {
             //获取 MediaExtractor
             extractor = new MyExtractor(Constants.VIDEO_PATH);
@@ -36,5 +39,7 @@ public abstract class BaseCodec {
             e.printStackTrace();
         }
     }
+
+
     protected abstract int decodeType();
 }

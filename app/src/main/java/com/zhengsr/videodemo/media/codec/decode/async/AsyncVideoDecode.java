@@ -1,20 +1,17 @@
 package com.zhengsr.videodemo.media.codec.decode.async;
 
 import android.graphics.SurfaceTexture;
+import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.Surface;
 
 import androidx.annotation.NonNull;
 
-import com.zhengsr.videodemo.media.codec.decode.BaseAsyncDecode;
-
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
-import java.util.function.LongToDoubleFunction;
 
 /**
  * @author by zhengshaorui 2020/7/27-17:17
@@ -112,6 +109,7 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
                     if (mTime == -1) {
                         mTime = System.currentTimeMillis();
                     }
+
                     Bundle bundle = msg.getData();
                     int index = bundle.getInt("index");
                     long ptsTime = bundle.getLong("time");
@@ -126,6 +124,7 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
         }
         return super.handleMessage(msg);
     }
+
 
 
 

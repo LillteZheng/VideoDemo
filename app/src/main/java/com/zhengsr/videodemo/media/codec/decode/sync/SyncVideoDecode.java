@@ -3,9 +3,6 @@ package com.zhengsr.videodemo.media.codec.decode.sync;
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodec;
 import android.util.Log;
-import android.view.Surface;
-
-import com.zhengsr.videodemo.media.codec.decode.BaseSyncDecode;
 
 /**
  * 视频解码
@@ -35,10 +32,10 @@ public class SyncVideoDecode extends BaseSyncDecode {
         //等到拿到输出的buffer下标
         int outputId = mediaCodec.dequeueOutputBuffer(info, TIME_US);
 
-        while (outputId > 0) {
-            if (mStartMs == -1) {
-                mStartMs = System.currentTimeMillis();
-            }
+        if (mStartMs == -1) {
+            mStartMs = System.currentTimeMillis();
+        }
+        while (outputId >= 0) {
             //矫正pts
             sleepRender(info, mStartMs);
 
@@ -52,6 +49,7 @@ public class SyncVideoDecode extends BaseSyncDecode {
 
                 return true;
             }
+            Log.d(TAG, "zsr handleOutputData: ");
             outputId = mediaCodec.dequeueOutputBuffer(info, TIME_US);
         }
 
