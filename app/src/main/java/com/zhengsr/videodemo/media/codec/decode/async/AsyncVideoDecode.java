@@ -87,7 +87,7 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
                                     extractor.getSampleTime(),
                                     extractor.getSampleFlags()
                             );
-                            mHandler.sendEmptyMessage(MSG_VIDEO_INPUT);
+                           // mHandler.sendEmptyMessage(MSG_VIDEO_INPUT);
                         } else {
                             //结束
                             codec.queueInputBuffer(

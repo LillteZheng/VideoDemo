@@ -134,7 +134,6 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
                             );
                             if (mHandler != null) {
 
-                            mHandler.sendEmptyMessage(MSG_AUDIO_INPUT);
                             }
                         } else {
                             //结束
