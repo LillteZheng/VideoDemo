@@ -85,8 +85,28 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
         mediaCodec.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                mBlockingQueue.add(index);
-                mHandler.sendEmptyMessage(MSG_AUDIO_INPUT);
+                ByteBuffer inputBuffer = mediaCodec.getInputBuffer(index);
+                int size = extractor.readBuffer(inputBuffer);
+                if (size >= 0) {
+                    codec.queueInputBuffer(
+                            index,
+                            0,
+                            size,
+                            extractor.getSampleTime(),
+                            extractor.getSampleFlags()
+                    );
+
+                } else {
+                    //结束
+                    codec.queueInputBuffer(
+                            index,
+                            0,
+                            0,
+                            0,
+                            MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                    );
+
+                }
             }
 
             @Override
@@ -115,45 +135,7 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         switch (msg.what){
-            case MSG_AUDIO_INPUT:
-                try {
-                    //从队列中拿到空闲buffer的下标
-                    Integer index = mBlockingQueue.poll(100, TimeUnit.MICROSECONDS);
-                    MediaCodec codec = mediaCodec;
-                    if (index != null && index>=0){
 
-                        ByteBuffer inputBuffer = mediaCodec.getInputBuffer(index);
-                        int size = extractor.readBuffer(inputBuffer);
-                        if (size >= 0) {
-                            codec.queueInputBuffer(
-                                    index,
-                                    0,
-                                    size,
-                                    extractor.getSampleTime(),
-                                    extractor.getSampleFlags()
-                            );
-                            if (mHandler != null) {
-
-                            }
-                        } else {
-                            //结束
-                            codec.queueInputBuffer(
-                                    index,
-                                    0,
-                                    0,
-                                    0,
-                                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
-                            );
-                            if (mHandler != null) {
-
-                            mHandler.removeMessages(MSG_AUDIO_INPUT);
-                            }
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
             case MSG_AUDIO_OUTPUT:
                 int index = msg.arg1;
                 int size = msg.arg2;

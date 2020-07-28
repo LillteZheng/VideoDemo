@@ -3,6 +3,7 @@ package com.zhengsr.videodemo.media.codec.decode.async;
 import android.graphics.SurfaceTexture;
 import android.media.AudioTrack;
 import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Message;
@@ -11,6 +12,8 @@ import android.view.Surface;
 import androidx.annotation.NonNull;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +24,8 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
     private static final String TAG = "AsyncVideoDecode";
     private Surface mSurface;
     private long mTime = -1;
+    private Map<Integer, MediaCodec.BufferInfo> map =
+            new ConcurrentHashMap<>();
     public AsyncVideoDecode(SurfaceTexture surfaceTexture) {
         super();
         mSurface = new Surface(surfaceTexture);
@@ -29,12 +34,30 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
     @Override
     public void start(){
         super.start();
-        mBlockingQueue.clear();
         mediaCodec.setCallback(new MediaCodec.Callback() {
             @Override
             public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                mBlockingQueue.add(index);
-                mHandler.sendEmptyMessage(MSG_VIDEO_INPUT);
+                ByteBuffer inputBuffer = mediaCodec.getInputBuffer(index);
+                int size = extractor.readBuffer(inputBuffer);
+                if (size >= 0) {
+                    codec.queueInputBuffer(
+                            index,
+                            0,
+                            size,
+                            extractor.getSampleTime(),
+                            extractor.getSampleFlags()
+                    );
+                    // mHandler.sendEmptyMessage(MSG_VIDEO_INPUT);
+                } else {
+                    //结束
+                    codec.queueInputBuffer(
+                            index,
+                            0,
+                            0,
+                            0,
+                            MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                    );
+                }
             }
 
             @Override
@@ -46,6 +69,8 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
                 bundle.putLong("time",info.presentationTimeUs);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
+
+
             }
 
             @Override
@@ -60,6 +85,8 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
         });
         mediaCodec.configure(mediaFormat,mSurface,null,0);
         mediaCodec.start();
+
+
     }
 
     @Override
@@ -70,40 +97,7 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         switch (msg.what){
-            case MSG_VIDEO_INPUT:
-                try {
-                    //从队列中拿到空闲buffer的下标
-                    Integer index = mBlockingQueue.poll(100, TimeUnit.MICROSECONDS);
-                    MediaCodec codec = mediaCodec;
-                    if (index != null && index>=0){
 
-                        ByteBuffer inputBuffer = mediaCodec.getInputBuffer(index);
-                        int size = extractor.readBuffer(inputBuffer);
-                        if (size >= 0) {
-                            codec.queueInputBuffer(
-                                    index,
-                                    0,
-                                    size,
-                                    extractor.getSampleTime(),
-                                    extractor.getSampleFlags()
-                            );
-                           // mHandler.sendEmptyMessage(MSG_VIDEO_INPUT);
-                        } else {
-                            //结束
-                            codec.queueInputBuffer(
-                                    index,
-                                    0,
-                                    0,
-                                    0,
-                                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
-                            );
-                            mHandler.removeMessages(MSG_VIDEO_INPUT);
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                break;
             case MSG_VIDEO_OUTPUT:
                 try {
                     if (mTime == -1) {
@@ -131,7 +125,7 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
     /**
      * 数据的时间戳对齐
      **/
-    private void sleepRender(long ptsTimes, long startMs) {
+    private long sleepRender(long ptsTimes, long startMs) {
         /**
          * 注意这里是以 0 为出事目标的，info.presenttationTimes 的单位为微秒
          * 这里用系统时间来模拟两帧的时间差
@@ -142,11 +136,13 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
         // 如果当前帧比系统时间差快了，则延时以下
         if (timeDifference > 0) {
             try {
+                //todo 受系统影响，建议还是用视频本身去告诉解码器 pts 时间
                 Thread.sleep(timeDifference);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
         }
+        return timeDifference;
     }
 }

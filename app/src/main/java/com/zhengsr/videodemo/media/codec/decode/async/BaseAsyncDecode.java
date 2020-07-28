@@ -14,13 +14,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callback {
     private static final String TAG = "BaseAsyncDecode";
-    protected final static int MSG_AUDIO_INPUT = 0X010;
     protected final static int MSG_AUDIO_OUTPUT = 0X011;
-    protected final static int MSG_VIDEO_INPUT = 0X012;
     protected final static int MSG_VIDEO_OUTPUT = 0X013;
     protected HandlerThread mHandlerThread;
     protected Handler mHandler;
-    protected BlockingQueue<Integer> mBlockingQueue = new LinkedBlockingDeque<>();
 
     public BaseAsyncDecode() {
         super();
@@ -34,10 +31,6 @@ public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callb
 
 
     public void start() {
-        if (mBlockingQueue == null) {
-            mBlockingQueue = new LinkedBlockingDeque<>();
-        }
-        mBlockingQueue.clear();
         if (mHandlerThread == null) {
             mHandlerThread = new HandlerThread(decodeType() == VIDEO ? "videoThread" : "audioThread");
             mHandlerThread.start();
@@ -67,7 +60,6 @@ public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callb
         try {
             stop();
             releaseMedia();
-            mBlockingQueue = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,14 +72,9 @@ public abstract class BaseAsyncDecode extends BaseCodec implements Handler.Callb
             mHandlerThread = null;
         }
         if (mHandler != null) {
-            mHandler.removeMessages(MSG_VIDEO_INPUT);
             mHandler.removeMessages(MSG_VIDEO_OUTPUT);
-            mHandler.removeMessages(MSG_AUDIO_INPUT);
             mHandler.removeMessages(MSG_AUDIO_OUTPUT);
             mHandler = null;
-        }
-        if (mBlockingQueue != null) {
-            mBlockingQueue.clear();
         }
         stopMedia();
 
