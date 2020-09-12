@@ -93,6 +93,8 @@ public class SyncAudioDecode extends BaseSyncDecode {
         while (outputIndex >= 0) {
             outputBuffer = mediaCodec.getOutputBuffer(outputIndex);
             if (outputBuffer != null) {
+
+
                 //写数据到 AudioTrack 只，实现音频播放
                 audioTrack.write(outputBuffer, info.size, AudioTrack.WRITE_BLOCKING);
                 mediaCodec.releaseOutputBuffer(outputIndex, false);
@@ -113,7 +115,11 @@ public class SyncAudioDecode extends BaseSyncDecode {
         super.done();
         //释放 AudioTrack
         if (audioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
-            audioTrack.stop();
+            try {
+                audioTrack.stop();
+            }catch (Exception e){
+
+            }
         }
         audioTrack.release();
     }

@@ -161,7 +161,11 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
         super.stop();
         //释放 AudioTrack
         if (mAudioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
-            mAudioTrack.stop();
+            try {
+                mAudioTrack.stop();
+            }catch (Exception e){
+
+            }
         }
     }
 

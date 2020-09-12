@@ -36,6 +36,7 @@ public class AacCodecActivity extends AppCompatActivity {
     private TextView mTextView;
     StringBuilder mSb = new StringBuilder();
     private CountDownLatch mDownLatch = new CountDownLatch(1);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +72,7 @@ public class AacCodecActivity extends AppCompatActivity {
                             mRecordThread.done();
                         }
                         try {
-                            mDownLatch.await(2000,TimeUnit.SECONDS);
+                            mDownLatch.await(2000, TimeUnit.SECONDS);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -80,6 +81,8 @@ public class AacCodecActivity extends AppCompatActivity {
                        /* String pcmPath = Constants.PATH+ "/codecAudio.pcm";
                         String audioPath = Constants.PATH+ "/codec.aac";
                         new Thread(new AudioEncodeRunnable(pcmPath,audioPath)).start();*/
+                        break;
+                    default:
                         break;
                 }
                 return false;
@@ -98,7 +101,8 @@ public class AacCodecActivity extends AppCompatActivity {
 
     class EncodeAacThread extends Thread {
         private boolean isDone;
-        private  MediaCodec encode;
+        private MediaCodec encode;
+
         public EncodeAacThread() {
             try {
                 /**
@@ -116,7 +120,7 @@ public class AacCodecActivity extends AppCompatActivity {
                 format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 500 * 1024);
 
                 encode = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC);
-                encode.configure(format,null,null,MediaCodec.CONFIGURE_FLAG_ENCODE);
+                encode.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,15 +136,15 @@ public class AacCodecActivity extends AppCompatActivity {
             FileInputStream fis = null;
             FileOutputStream fos = null;
             try {
-                fis = new FileInputStream(Constants.PATH+ "/codecAudio.pcm");
-                fos = new FileOutputStream(Constants.PATH+"/codec.aac");
+                fis = new FileInputStream(Constants.PATH + "/codecAudio.pcm");
+                fos = new FileOutputStream(Constants.PATH + "/codec.aac");
 
-                byte[] bytes = new byte[4*1024];
+                byte[] bytes = new byte[4 * 1024];
                 int len;
 
-                while(!isDone){
+                while (!isDone) {
 
-                    if (( (len = fis.read(bytes)) > 0)) {
+                    if (((len = fis.read(bytes)) > 0)) {
 
                         //单位是 us
                         int inputBufferId = encode.dequeueInputBuffer(-1);
@@ -148,15 +152,17 @@ public class AacCodecActivity extends AppCompatActivity {
                             //拿到编码的空buffer
                             ByteBuffer buffer = encode.getInputBuffer(inputBufferId);
 
-                            //写数据到 buffer
-                            buffer.put(bytes, 0, len);
-                            encode.queueInputBuffer(
-                                    inputBufferId,
-                                    0,
-                                    len,
-                                    0,
-                                    0
-                            );
+                            if (buffer != null) {
+                                //写数据到 buffer
+                                buffer.put(bytes, 0, len);
+                                encode.queueInputBuffer(
+                                        inputBufferId,
+                                        0,
+                                        len,
+                                        0,
+                                        0
+                                );
+                            }
 
                             //编码之后的数据
                             int outputBufferId = encode.dequeueOutputBuffer(info, 10000);
@@ -165,26 +171,29 @@ public class AacCodecActivity extends AppCompatActivity {
                                 int outBitSize = info.size;
                                 int outPacketSize = outBitSize + 7;//7为ADT头部的大小
                                 ByteBuffer outputBuffer = encode.getOutputBuffer(outputBufferId);
-                                //数据开始的偏移量
-                                outputBuffer.position(info.offset);
-                                outputBuffer.limit(info.offset + outBitSize);
-                                byte[] chunkAudio = new byte[outPacketSize];
-                                addADTStoPacket(chunkAudio, outPacketSize);//添加ADTS
-                                outputBuffer.get(chunkAudio, 7, outBitSize);//将编码得到的AAC数据 取出到byte[]中
+                                if (outputBuffer != null) {
+                                    //数据开始的偏移量
+                                    outputBuffer.position(info.offset);
+                                    outputBuffer.limit(info.offset + outBitSize);
+                                    byte[] chunkAudio = new byte[outPacketSize];
+                                    addADTStoPacket(chunkAudio, outPacketSize);//添加ADTS
+                                    //将编码得到的AAC数据 取出到byte[]中
+                                    outputBuffer.get(chunkAudio, 7, outBitSize);
 
-                                //录制aac音频文件，保存在手机内存中
-                                fos.write(chunkAudio, 0, chunkAudio.length);
-                                fos.flush();
+                                    //录制aac音频文件，保存在手机内存中
+                                    fos.write(chunkAudio, 0, chunkAudio.length);
+                                    fos.flush();
 
-                                outputBuffer.position(info.offset);
-                                encode.releaseOutputBuffer(outputBufferId, false);
-                                outputBufferId = encode.dequeueOutputBuffer(info, 10000);
+                                    outputBuffer.position(info.offset);
+                                    encode.releaseOutputBuffer(outputBufferId, false);
+                                    outputBufferId = encode.dequeueOutputBuffer(info, 10000);
 
+                                }
                             }
 
 
                         }
-                    }else {
+                    } else {
                         isDone = true;
                     }
                 }
@@ -197,8 +206,8 @@ public class AacCodecActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
-                CloseUtils.close(fis,fos);
+            } finally {
+                CloseUtils.close(fis, fos);
             }
 
 
@@ -206,12 +215,9 @@ public class AacCodecActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     /**
      * 写入ADTS头部数据
+     *
      * @param packet
      * @param packetLen
      */
@@ -220,6 +226,7 @@ public class AacCodecActivity extends AppCompatActivity {
         int freqIdx = 4; // 44.1KHz
         int chanCfg = 2; // CPE
 
+        //syncword，比如为1，即0xff
         packet[0] = (byte) 0xFF;
         packet[1] = (byte) 0xF9;
         packet[2] = (byte) (((profile - 1) << 6) + (freqIdx << 2) + (chanCfg >> 2));
@@ -248,7 +255,7 @@ public class AacCodecActivity extends AppCompatActivity {
                     encodingPcm16bit,
                     minBufferSize
             );
-            Log.d(TAG, "zsr AudioRecordThread: "+minBufferSize);
+            Log.d(TAG, "zsr AudioRecordThread: " + minBufferSize);
         }
 
         @Override
