@@ -16,4 +16,4 @@
 [Android 音视频编解码(一) – MediaCodec 初探](https://blog.csdn.net/u011418943/article/details/107448870)
 [Android 音视频编解码(二) -- MediaCodec 解码(同步和异步)](https://blog.csdn.net/u011418943/article/details/107561111)
 
-**解码模块涉及知识比较多，不想了解个大概，这个东西需要持续学习，先学习OpenGL，后续更新**
+**编解码模块涉及知识比较多，不想了解个大概，这个东西需要持续学习，先学习OpenGL，后续更新**
