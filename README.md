@@ -1,5 +1,5 @@
 
-# **注意注意！使用该工程，需要你把自己的视频push到 sdcard，然后通过配置一下 Constants.VIDEO_PATH **
+# **注意注意！使用该工程，需要你把自己的视频push到手机，然后修改 Constants.VIDEO_PATH 的路径和名字**
 
 # VideoDemo
 音视频学习demo,正在升级打怪，加油鸭~
