@@ -40,5 +40,13 @@
         android:text="MediaCodec "
         android:textAllCaps="false"
         android:onClick="mediaCodec"/>
+    
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="截屏，录屏"
+        android:onClick="mediaProjecing"
+        />
+
 
 </LinearLayout>

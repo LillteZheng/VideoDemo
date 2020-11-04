@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.zhengsr.videodemo.activity.AudioRecordActivity;
 import com.zhengsr.videodemo.activity.ExtractorMuxerActivity;
 import com.zhengsr.videodemo.activity.MediaPlayerActivity;
+import com.zhengsr.videodemo.activity.MediaProjectionActivity;
 import com.zhengsr.videodemo.activity.camera.CameraActivity;
 import com.zhengsr.videodemo.activity.codec.MediaCodecActivity;
 
@@ -56,5 +57,9 @@ public  class MainActivity extends AppCompatActivity {
 
     public void extractor(View view) {
         startActivity(new Intent(this, ExtractorMuxerActivity.class));
+    }
+
+    public void mediaProjecing(View view) {
+        startActivity(new Intent(this, MediaProjectionActivity.class));
     }
 }

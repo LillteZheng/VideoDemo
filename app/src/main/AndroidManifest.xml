@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.codec.DecodeMediaActivity"></activity>
+        <activity android:name=".activity.MediaProjectionActivity"/>
+        <activity android:name=".activity.codec.DecodeMediaActivity" />
         <activity android:name=".activity.codec.AacCodecActivity" />
         <activity android:name=".activity.ExtractorMuxerActivity" />
         <activity android:name=".activity.camera.CameraActivity" />
