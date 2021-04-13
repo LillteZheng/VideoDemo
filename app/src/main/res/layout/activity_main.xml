@@ -44,7 +44,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="截屏，录屏"
+        android:text="录屏播放"
         android:onClick="mediaProjecing"
         />
 

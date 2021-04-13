@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.0"
@@ -44,5 +45,6 @@ dependencies {
 // CameraX view 集合，比如 cameraview，preview等
     implementation "androidx.camera:camera-view:1.0.0-alpha10"
 
-
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
 }

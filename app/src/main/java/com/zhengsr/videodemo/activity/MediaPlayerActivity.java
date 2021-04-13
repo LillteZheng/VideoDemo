@@ -16,12 +16,12 @@ import android.widget.Toast;
 
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
+import com.zhengsr.videodemo.utils.MediaPlayerHelper;
 
 import java.io.IOException;
 
 public class MediaPlayerActivity extends AppCompatActivity {
     private static final String TAG = "MediaPlayerActivity";
-    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,35 +31,16 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
         SurfaceView surfaceView = findViewById(R.id.surface);
 
-        mMediaPlayer = new MediaPlayer();
-
-
 
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                try {
-                    mMediaPlayer.reset();
-                    //设置资源
-                    mMediaPlayer.setDataSource(Constants.VIDEO_PATH);
-                    //设置播放的holder
-                    mMediaPlayer.setDisplay(holder);
-                    //设置音频格式
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    //异步加载
-                    mMediaPlayer.prepareAsync();
-
-                    mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            Toast.makeText(MediaPlayerActivity.this, "准备完毕，请点击播放!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                } catch (IOException e) {
-                    Log.d(TAG, "zsr surfaceCreated: "+e.toString());
-                    e.printStackTrace();
-                }
+                MediaPlayerHelper.prepare(Constants.VIDEO_PATH, holder, new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        Toast.makeText(MediaPlayerActivity.this, "准备完毕，请点击播放!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -76,28 +57,20 @@ public class MediaPlayerActivity extends AppCompatActivity {
         findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mMediaPlayer.isPlaying()){
-                    mMediaPlayer.start();
-                }
+                MediaPlayerHelper.play();
             }
         });
         findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.pause();
-                }
+                MediaPlayerHelper.pause();
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
+        MediaPlayerHelper.release();
         super.onDestroy();
 
     }
