@@ -14,6 +14,8 @@
 
 [Android 音视频开发(五) -- 使用 MediaExtractor 分离音视频，并使用 MediaMuxer合成新视频(音视频同步)](https://blog.csdn.net/u011418943/article/details/107340700)
 
+[Android 音视频开发(六) -- Android Mediaprojection 截屏和录屏](https://blog.csdn.net/u011418943/article/details/115675871)
+
 
 # 二、Android MediaCodec 编解码
 [Android 音视频编解码(一) – MediaCodec 初探](https://blog.csdn.net/u011418943/article/details/107448870)
