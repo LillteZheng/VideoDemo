@@ -7,7 +7,12 @@
     android:orientation="vertical"
     tools:context=".activity.MediaProjectionActivity">
 
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="截屏"
+        android:onClick="capture"
+        />
 
     <Button
         android:layout_width="match_parent"

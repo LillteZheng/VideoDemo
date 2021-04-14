@@ -31,7 +31,7 @@ object MediaPlayerHelper {
                 prepareAsync()
                 setOnPreparedListener(prepareListener)
             } catch (e: Exception) {
-                Log.d(TAG, "zsr play: ")
+                Log.d(TAG, "zsr play: $e")
             }
         }
     }
