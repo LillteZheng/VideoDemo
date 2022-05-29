@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_decode_media.xml" value="0.17558022199798184" />
+        <entry key="app/src/main/res/layout/activity_test.xml" value="0.17558022199798184" />
+        <entry key="zplayer/src/main/res/drawable/player_progress_loading.xml" value="0.158" />
+        <entry key="zplayer/src/main/res/drawable/player_selector_play_button.xml" value="0.158" />
+        <entry key="zplayer/src/main/res/drawable/player_shape_play_bg.xml" value="0.158" />
+        <entry key="zplayer/src/main/res/layout/activity_main.xml" value="0.16801210898082744" />
+        <entry key="zplayer/src/main/res/layout/activity_media_player.xml" value="0.16801210898082744" />
+        <entry key="zplayer/src/main/res/layout/zplayer_prepare_layout.xml" value="0.2164855072463768" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

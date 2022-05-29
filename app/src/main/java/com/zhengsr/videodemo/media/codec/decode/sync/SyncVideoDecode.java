@@ -2,7 +2,9 @@ package com.zhengsr.videodemo.media.codec.decode.sync;
 
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodec;
+import android.media.MediaFormat;
 import android.util.Log;
+import android.view.Surface;
 
 /**
  * 视频解码
@@ -16,6 +18,9 @@ public class SyncVideoDecode extends BaseSyncDecode {
         super(surfaceTexture);
 
     }
+    public SyncVideoDecode(Surface surface){
+        super(surface);
+    }
 
     @Override
     public int decodeType() {
@@ -24,6 +29,8 @@ public class SyncVideoDecode extends BaseSyncDecode {
 
     @Override
     protected void configure() {
+        mediaFormat.setInteger(MediaFormat.KEY_WIDTH,4096);
+        mediaFormat.setInteger(MediaFormat.KEY_HEIGHT,2304);
         mediaCodec.configure(mediaFormat, mSurface, null, 0);
     }
 

@@ -7,6 +7,7 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.Surface;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,11 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
     public AsyncVideoDecode(SurfaceTexture surfaceTexture) {
         super();
         mSurface = new Surface(surfaceTexture);
+    }
+
+    public AsyncVideoDecode(Surface surface){
+        super();
+        mSurface = surface;
     }
 
     @Override
@@ -83,8 +89,13 @@ public class AsyncVideoDecode extends BaseAsyncDecode {
 
             }
         });
-        mediaCodec.configure(mediaFormat,mSurface,null,0);
-        mediaCodec.start();
+        try {
+            mediaCodec.configure(mediaFormat,mSurface,null,0);
+            mediaCodec.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "start: " +e.toString());
+        }
 
 
     }

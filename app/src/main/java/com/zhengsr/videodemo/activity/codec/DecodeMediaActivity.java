@@ -10,14 +10,20 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.VideoView;
 
 import com.zhengsr.videodemo.Constants;
 import com.zhengsr.videodemo.R;
@@ -37,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 
 public class DecodeMediaActivity extends AppCompatActivity {
     private static final String TAG = "DecodeMediaActivity";
-    private TextureView mTextureView;
     private SyncVideoDecode mVideoSync;
     private SyncAudioDecode mAudioDecodeSync;
     private ExecutorService mExecutorService = Executors.newFixedThreadPool(2);
@@ -54,8 +59,30 @@ public class DecodeMediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decode_media);
         init();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int w = dm.widthPixels;
+        int h = dm.heightPixels;
+        Log.d(TAG, "zsr onCreate: "+w+" "+h);
+        VideoView view = findViewById(R.id.videoView);
+        view.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                Log.d(TAG, "surfaceCreated() called with: holder = [" + holder + "]");
+                AsyncVideoDecode decode = new AsyncVideoDecode(view.getHolder().getSurface());
+                decode.start();
+            }
 
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                Log.d(TAG, "surfaceDestroyed() called with: holder = [" + holder + "]");
+
+            }
+        });
     }
 
 
@@ -63,50 +90,19 @@ public class DecodeMediaActivity extends AppCompatActivity {
      * 配置TextureView
      */
     private void init() {
-        mTextureView = findViewById(R.id.surface);
-        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
-
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                MyExtractor myExtractor = new MyExtractor(Constants.VIDEO_PATH);
-                MediaFormat videoFormat = myExtractor.getVideoFormat();
-                int vw = videoFormat.getInteger(MediaFormat.KEY_WIDTH);
-                int vh = videoFormat.getInteger(MediaFormat.KEY_WIDTH);
-                ViewGroup.LayoutParams params = mTextureView.getLayoutParams();
-                params.width = vw;
-                params.height = vh;
-                mTextureView.setLayoutParams(params);
-
-
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-        });
     }
 
     public void sync(View view) {
         stopMedia();
 
 
-        mVideoSync = new SyncVideoDecode(mTextureView.getSurfaceTexture());
+       /* mVideoSync = new SyncVideoDecode(mTextureView.getSurfaceTexture());
         mAudioDecodeSync = new SyncAudioDecode();
 
         mExecutorService.execute(mVideoSync);
         mExecutorService.execute(mAudioDecodeSync);
+        view.setVisibility(View.GONE);*/
     }
 
     public void async(View view) {
@@ -115,12 +111,12 @@ public class DecodeMediaActivity extends AppCompatActivity {
         stopMedia();
         // mExecutorService.shutdownNow();
 
-        mAsyncVide = new AsyncVideoDecode(mTextureView.getSurfaceTexture());
+       /* mAsyncVide = new AsyncVideoDecode(mTextureView.getSurfaceTexture());
 
         mAsyncVide.start();
 
         mAsyncAudio = new AsyncAudioDecode();
-        mAsyncAudio.start();
+        mAsyncAudio.start();*/
 
     }
 

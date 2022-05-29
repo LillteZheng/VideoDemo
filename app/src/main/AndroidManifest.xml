@@ -32,6 +32,7 @@
         <activity
             android:name=".activity.camera.Camera1Activity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.TestActivity"/>
         <activity android:name=".activity.AudioRecordActivity" />
         <activity android:name=".activity.codec.MediaCodecActivity" />
         <activity android:name=".activity.MediaPlayerActivity" />

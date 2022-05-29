@@ -12,17 +12,20 @@
         android:layout_height="wrap_content"
         android:text="使用同步模式"
         android:onClick="sync"
+        android:visibility="gone"
         />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="使用异步模式"
+        android:visibility="gone"
         android:onClick="async"
         />
 
-    <TextureView
-        android:id="@+id/surface"
+
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="240dp" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
