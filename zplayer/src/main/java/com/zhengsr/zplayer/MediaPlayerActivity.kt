@@ -13,7 +13,7 @@ class MediaPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
-        playerView.setAssert("test.mp4")
+        playerView.setAssert("任然 - 飞鸟和蝉.mp3")
     }
 
 

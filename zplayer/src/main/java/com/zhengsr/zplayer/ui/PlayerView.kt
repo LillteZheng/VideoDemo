@@ -1,7 +1,6 @@
 package com.zhengsr.zplayer.ui
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
@@ -9,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.zhengsr.playerdemo.listener.PlayerEventListener
 import com.zhengsr.playerdemo.player.AndroidMediaPlayer
-import kotlinx.android.synthetic.main.activity_media_player.view.*
+import com.zhengsr.zplayer.ui.controller.PlayerController
 
 /**
  * @author by zhengshaorui 2022/5/6

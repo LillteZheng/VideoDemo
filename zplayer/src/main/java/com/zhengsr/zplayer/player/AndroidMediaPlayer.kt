@@ -2,6 +2,7 @@ package com.zhengsr.playerdemo.player
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.midi.MidiDeviceInfo
@@ -27,11 +28,10 @@ class AndroidMediaPlayer {
 
      fun initMediaPlayer() {
         mediaPlayer = MediaPlayer().apply {
-            setAudioStreamType(AudioManager.STREAM_MUSIC)
-            /*val build = AudioAttributes.Builder()
+            val build = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
-            setAudioAttributes(build)*/
+            setAudioAttributes(build)
             setOnPreparedListener(preparedListener)
             setOnVideoSizeChangedListener(sizeChangedListener)
             setOnCompletionListener(completionListener)

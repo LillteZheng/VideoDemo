@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dialog_bg">#bc000000</color>
+    <color name="alpha_25_black">#40000000</color>
+    <color name="redTab">#D03E49</color>
 </resources>
