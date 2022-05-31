@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".MediaPlayerActivity">
 
-    <com.zhengsr.zplayer.ui.PlayerView
+    <com.zhengsr.zplayer.ui.VideoPlayer
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="200dp"/>

@@ -4,7 +4,7 @@ package com.zhengsr.playerdemo.listener
  * @author by zhengshaorui 2022/5/5
  * describe：播放器状态
  */
-interface PlayerEventListener {
+interface IMediaPlayerListener {
     fun onError()
 
     fun onCompletion()

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import com.zhengsr.playerdemo.player.AndroidMediaPlayer
+import com.zhengsr.zplayer.player.AndroidMediaPlayer
 
 /**
  * @author by zhengshaorui 2022/5/6

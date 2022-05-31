@@ -178,7 +178,6 @@ public class AudioRecordActivity extends AppCompatActivity {
           
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "zsr playpcm2: " + e);
         }
 
     }
@@ -260,7 +259,7 @@ public class AudioRecordActivity extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d(TAG, "zsr run: " + e.getMessage());
+                Log.d(TAG, " run: " + e.getMessage());
             } finally {
                 CloseUtils.close(fos, wavFos,wavRaf);
             }
@@ -338,7 +337,7 @@ public class AudioRecordActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d(TAG, "zsr run: " + e);
+                    Log.d(TAG, " run: " + e);
                 } finally {
                     CloseUtils.close(fis);
                 }

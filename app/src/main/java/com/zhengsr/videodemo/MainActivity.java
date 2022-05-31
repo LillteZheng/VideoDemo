@@ -44,7 +44,6 @@ public  class MainActivity extends AppCompatActivity {
         MediaFormat videoFormat = myExtractor.getVideoFormat();
         int vw = videoFormat.getInteger(MediaFormat.KEY_WIDTH);
         int vh = videoFormat.getInteger(MediaFormat.KEY_HEIGHT);
-        Log.d("TAG", "zsr onCreate: "+vw+" "+vh);
         startActivity(new Intent(this, DecodeMediaActivity.class));
     }
 

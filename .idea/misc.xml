@@ -8,12 +8,22 @@
         <entry key="zplayer/src/main/res/drawable/player_progress_loading.xml" value="0.158" />
         <entry key="zplayer/src/main/res/drawable/player_selector_play_button.xml" value="0.158" />
         <entry key="zplayer/src/main/res/drawable/player_shape_play_bg.xml" value="0.158" />
+        <entry key="zplayer/src/main/res/drawable/progress_bar_style.xml" value="0.454" />
+        <entry key="zplayer/src/main/res/drawable/seek_progress.xml" value="0.454" />
+        <entry key="zplayer/src/main/res/drawable/seek_thumb.xml" value="0.454" />
+        <entry key="zplayer/src/main/res/drawable/seek_thumb_normal.xml" value="0.454" />
+        <entry key="zplayer/src/main/res/drawable/seek_thumb_pressed.xml" value="0.454" />
+        <entry key="zplayer/src/main/res/drawable/selector_full_screen_button.xml" value="0.454" />
         <entry key="zplayer/src/main/res/layout/activity_main.xml" value="0.16801210898082744" />
         <entry key="zplayer/src/main/res/layout/activity_media_player.xml" value="0.16801210898082744" />
+        <entry key="zplayer/src/main/res/layout/custom_video_player_bottom.xml" value="0.55" />
+        <entry key="zplayer/src/main/res/layout/zplayer_layout_complete_view.xml" value="0.55" />
+        <entry key="zplayer/src/main/res/layout/zplayer_playing_bottom.xml" value="0.55" />
         <entry key="zplayer/src/main/res/layout/zplayer_prepare_layout.xml" value="0.2164855072463768" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

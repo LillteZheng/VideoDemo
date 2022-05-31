@@ -2,10 +2,7 @@ package com.zhengsr.zplayer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import com.zhengsr.playerdemo.listener.PlayerEventListener
-import com.zhengsr.playerdemo.player.AndroidMediaPlayer
 import kotlinx.android.synthetic.main.activity_media_player.*
 
 class MediaPlayerActivity : AppCompatActivity() {
@@ -13,7 +10,7 @@ class MediaPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
-        playerView.setAssert("任然 - 飞鸟和蝉.mp3")
+        playerView.setAssert("test.mp4")
     }
 
 
@@ -24,7 +21,7 @@ class MediaPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        playerView.onPause()
+        playerView.pause()
     }
 
     fun playAudio(view: View) {

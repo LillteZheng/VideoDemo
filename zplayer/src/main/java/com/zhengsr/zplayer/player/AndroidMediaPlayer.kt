@@ -1,14 +1,12 @@
-package com.zhengsr.playerdemo.player
+package com.zhengsr.zplayer.player
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.midi.MidiDeviceInfo
 import android.util.Log
 import android.view.Surface
-import com.zhengsr.playerdemo.listener.PlayerEventListener
+import com.zhengsr.playerdemo.listener.IMediaPlayerListener
 
 /**
  * @author by zhengshaorui 2022/5/29
@@ -17,16 +15,15 @@ import com.zhengsr.playerdemo.listener.PlayerEventListener
 class AndroidMediaPlayer {
     private val TAG = "AndroidMediaPlayer"
     private var mediaPlayer: MediaPlayer? = null
-    private var listener: PlayerEventListener? = null
+    private var listener: IMediaPlayerListener? = null
 
 
-
-    fun setPlayerEventListener(listener: PlayerEventListener): AndroidMediaPlayer {
+    fun setPlayerEventListener(listener: IMediaPlayerListener): AndroidMediaPlayer {
         this.listener = listener
         return this
     }
 
-     fun initMediaPlayer() {
+    fun initMediaPlayer() {
         mediaPlayer = MediaPlayer().apply {
             val build = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -57,28 +54,34 @@ class AndroidMediaPlayer {
     }
 
 
-    fun setSurface(surface: Surface){
+    fun setSurface(surface: Surface) {
         mediaPlayer?.setSurface(surface)
     }
-    fun isPlaying() = mediaPlayer?.isPlaying?:false
+
+    fun isPlaying() = mediaPlayer?.isPlaying ?: false
     fun pause() = mediaPlayer?.pause()
 
     fun start() {
         mediaPlayer?.start()
     }
 
-    fun getCurrentPosition(): Int {
-        return mediaPlayer?.currentPosition ?: 0
+    fun seekTo(time: Long) {
+        mediaPlayer?.seekTo(time.toInt())
     }
 
-    fun getDuration(): Int {
-        return mediaPlayer?.getDuration() ?: 0
+    fun getCurrentPosition(): Long {
+        return mediaPlayer?.currentPosition?.toLong() ?: 0L
     }
 
-    fun stop(){
+    fun getDuration(): Long {
+        return mediaPlayer?.duration?.toLong() ?: 0L
+    }
+
+    fun stop() {
         mediaPlayer?.stop()
     }
-    fun release(){
+
+    fun release() {
         mediaPlayer?.apply {
             setOnPreparedListener(null)
             setOnVideoSizeChangedListener(null)
