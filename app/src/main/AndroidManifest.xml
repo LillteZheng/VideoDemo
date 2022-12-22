@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 支持相机才能运行 -->
     <uses-feature android:name="android.hardware.camera.any" /> <!-- 需要设备有相机 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -53,6 +54,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <service
+            android:name="com.zhengsr.videodemo.activity.mediaproject.MediaProjectService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
     </application>
 
 </manifest>
