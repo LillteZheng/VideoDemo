@@ -24,27 +24,6 @@
 
 **编解码模块涉及知识比较多，不想了解个大概，这个东西需要持续学习，先学习OpenGL，后续更新**
 
-# webRtc
-[Android WebRTC 入门教程(一) -- 使用相机](https://blog.csdn.net/u011418943/article/details/127108642)
-
-[Android WebRTC 入门教程(二) -- 模拟p2p本地视频传输](https://blog.csdn.net/u011418943/article/details/127117836)
-
-
-# OpenGL 
-
-
-[Android OpenGL ES 学习(一) -- 基本概念](https://blog.csdn.net/u011418943/article/details/127950019?spm=1001.2014.3001.5502)
-
-[Android OpenGL ES 学习(二) -- 图形渲染管线和GLSL](https://blog.csdn.net/u011418943/article/details/128048284?spm=1001.2014.3001.5502)
-
-[Android OpenGL ES 学习(三) -- 绘制平面图形](https://blog.csdn.net/u011418943/article/details/128049711)
-
- [Android OpenGL ES 学习(四) -- 正交投屏](https://blog.csdn.net/u011418943/article/details/128052420)
- 
-[Android OpenGL ES 学习(五) -- 渐变色](https://blog.csdn.net/u011418943/article/details/128120008?spm=1001.2014.3001.5502)
-
-[Android OpenGL ES 学习(六) – 使用 VBO、VAO 和 EBO/IBO 优化程序](https://mp.csdn.net/mp_blog/creation/success/128150904)
-
-[Android OpenGL ES 学习(七) – 纹理 ](https://blog.csdn.net/u011418943/article/details/128163235?spm=1001.2014.3001.5502)
+ 更多音视频，参考：[Android 音视频入门/进阶教程](https://blog.csdn.net/u011418943/article/details/128478498?spm=1001.2014.3001.5502)
 
 
